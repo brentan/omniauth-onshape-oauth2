@@ -32,7 +32,11 @@ end
 
 You can now access the OmniAuth onShape OAuth2 URL: `/auth/onshape`.
 
-For testing, you can access the partner dev server, which has a different strategy, by passing the options directly:
+Be sure to include the default callback URL in your onShape OAuth application settings: `/auth/onshape/callback`
+
+## Partner Development Server
+
+For testing, you can access the partner dev server, which has a different strategy, by passing the endpoint directly:
 
 ```ruby
 Rails.application.config.middleware.use OmniAuth::Builder do
