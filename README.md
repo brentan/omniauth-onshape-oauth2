@@ -29,9 +29,21 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :onshape, ENV['ONSHAPE_KEY'], ENV['ONSHAPE_SECRET']
 end
 ```
+
 You can now access the OmniAuth onShape OAuth2 URL: `/auth/onshape`.
 
-You can also utilize the partner dev server, which has a different strategy, using the provider name :onshape_dev and URL /auth/onshape_dev
+For testing, you can access the partner dev server, which has a different strategy, by passing the options directly:
+
+```ruby
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :onshape, ENV['ONSHAPE_KEY'], ENV['ONSHAPE_SECRET'],
+    :setup => lambda{|env| 
+      env['omniauth.strategy'].options[:client_options].site = 'https://partner.dev.onshape.com/api';
+      env['omniauth.strategy'].options[:client_options].authorize_url = 'https://partner.dev.onshape.com/oauth/authorize';
+      env['omniauth.strategy'].options[:client_options].token_url = 'https://partner.dev.onshape.com/oauth/token';
+    }
+end
+```
 
 ## Granting Member Permissions to Your Application
 

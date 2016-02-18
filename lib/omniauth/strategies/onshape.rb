@@ -2,17 +2,17 @@ require 'omniauth-oauth2'
 
 module OmniAuth
   module Strategies
-    class onShape < OmniAuth::Strategies::OAuth2
+    class OnShape < OmniAuth::Strategies::OAuth2
       # Give your strategy a name.
-      option :name, 'onshape_dev'
+      option :name, 'onshape'
 
       # This is where you pass the options you would pass when
       # initializing your consumer from the OAuth gem.
       option :client_options, {
-        :site => 'https://dev-portal.dev.onshape.com',
-        :authorize_url => 'https://partner.dev.onshape.com/oauth/authorize',
-        :token_url => 'https://partner.dev.onshape.com/oauth/token'
-      }
+        :site => 'https://cad.onshape.com/api',
+        :authorize_url => 'https://oauth.onshape.com/oauth/authorize',
+        :token_url => 'https://oauth.onshape.com/oauth/token'
+      } 
 
       # option :scope, 'r_basicprofile r_emailaddress'
       # option :fields, ['id', 'email-address', 'first-name', 'last-name', 'headline', 'location', 'industry', 'picture-url', 'public-profile-url']
@@ -27,7 +27,11 @@ module OmniAuth
       info do
         {
           :name => raw_info['name'],
-          :email => raw_info['email']
+          :firstName => raw_info['firstName'],
+          :lastName => raw_info['lastName'],
+          :email => raw_info['email'],
+          :image => raw_info['image'],
+          :url => raw_info['href'],
         }
       end
 
@@ -35,23 +39,12 @@ module OmniAuth
         { 'raw_info' => raw_info }
       end
 
-      alias :oauth2_access_token :access_token
-
-      #def access_token
-      #  ::OAuth2::AccessToken.new(client, oauth2_access_token.token, {
-      #    :mode => :query,
-      #    :param_name => 'oauth2_access_token',
-      #    :expires_in => oauth2_access_token.expires_in,
-      #    :expires_at => oauth2_access_token.expires_at
-      #  })
-      #end
-
       def raw_info
-        @raw_info ||= access_token.get("/v1/people/~:(#{option_fields.join(',')})?format=json").parsed
+        @raw_info ||= access_token.get("users/sessioninfo").parsed
       end
 
     end
   end
 end
 
-OmniAuth.config.add_camelization 'onshape', 'onShape'
+OmniAuth.config.add_camelization 'onshape', 'OnShape'
