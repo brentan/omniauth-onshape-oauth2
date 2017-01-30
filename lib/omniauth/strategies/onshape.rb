@@ -3,6 +3,8 @@ require 'omniauth-oauth2'
 module OmniAuth
   module Strategies
     class OnShape < OmniAuth::Strategies::OAuth2
+      DEFAULT_SCOPE = 'OAuth2ReadPII,OAuth2Read'
+
       # Give your strategy a name.
       option :name, 'onshape'
 
@@ -13,6 +15,19 @@ module OmniAuth
         :authorize_url => 'https://oauth.onshape.com/oauth/authorize',
         :token_url => 'https://oauth.onshape.com/oauth/token'
       } 
+
+      option :authorize_options, [:scope]
+
+      def authorize_params
+        super.tap do |params|
+          %w[scope].each do |v|
+            if request.params[v]
+              params[v.to_sym] = request.params[v]
+            end
+          end
+          params[:scope] ||= DEFAULT_SCOPE
+        end
+      end
 
       # option :scope, 'r_basicprofile r_emailaddress'
       # option :fields, ['id', 'email-address', 'first-name', 'last-name', 'headline', 'location', 'industry', 'picture-url', 'public-profile-url']

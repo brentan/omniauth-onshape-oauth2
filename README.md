@@ -53,12 +53,13 @@ end
 
 With the onShape API, you have the ability to specify which permissions you want users to grant your application.
 
-By default, omniauth-onshape-oauth2 requests the default permissions registered with your app.
+By default, omniauth-onshape-oauth2 requests the following permissions registered with your app:
+OAuth2ReadPII,OAuth2Read
 
 You can configure the scope option:
 
 ```ruby
-provider :onshape, ENV['ONSHAPE_KEY'], ENV['ONSHAPE_SECRET'], :scope => 'r_emailaddress'
+provider :onshape, ENV['ONSHAPE_KEY'], ENV['ONSHAPE_SECRET'], :scope => 'OAuth2ReadPII,OAuth2Read...'
 ```
 
 ## Contributing
